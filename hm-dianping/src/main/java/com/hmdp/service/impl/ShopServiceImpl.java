@@ -42,6 +42,7 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
         if(shop == null){
             return Result.fail("店铺不存在");
         }
+
         //存在，写入redis
         stringRedisTemplate.opsForValue().set(key,JSONUtil.toJsonStr(shop));
         return Result.ok(shop);
