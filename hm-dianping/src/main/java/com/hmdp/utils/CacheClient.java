@@ -72,7 +72,8 @@ public class CacheClient {
     }
 
     private static final ExecutorService CACHE_REBUILD_EXECUTOR = Executors.newFixedThreadPool(10);
-    private <R>R queryWithLogicalExpire(String keyPrefix,Long id) {
+    public  <R,ID>R queryWithLogicalExpire(String keyPrefix,ID id,Class<R> type,Function<ID,R> dbFallback,
+                                           Long time , TimeUnit unit) {
         String key = keyPrefix + id;
         //1.从redis查询商铺缓存
         String shopJson = stringRedisTemplate.opsForValue().get(key);
@@ -83,13 +84,13 @@ public class CacheClient {
         }
         //4.命中，需要把json反序列化为对象
         RedisData redisData = JSONUtil.toBean(shopJson, RedisData.class);
-        Shop shop = JSONUtil.toBean((JSONObject) redisData.getData(),Shop.class);
+        R r = JSONUtil.toBean((JSONObject) redisData.getData(),type);
         LocalDateTime expireTime = redisData.getExpireTime();
 
         //5判断是否过期
         if(expireTime.isAfter(LocalDateTime.now())){
             //5.1未过期，直接返回店铺信息
-            return shop;
+            return r;
         }
         //5.2已过期进行缓存重建
 
@@ -105,7 +106,10 @@ public class CacheClient {
 
                 try {
                     //重建缓存
-                    this.saveShop2Redis(id,20L);
+                    //1.查询数据胡
+                    R r1 = dbFallback.apply(id);
+                    //2.存入redis
+                    this.setLogicExpire(key,r1,time,unit);
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 } finally {
@@ -116,7 +120,7 @@ public class CacheClient {
             });
         }
 
-        return shop;
+        return r;
     }
     private boolean tryLock(String key){
         Boolean flag = stringRedisTemplate.opsForValue().setIfAbsent(key, "1", 10, TimeUnit.SECONDS);
