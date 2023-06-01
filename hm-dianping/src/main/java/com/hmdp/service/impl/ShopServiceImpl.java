@@ -55,7 +55,6 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
         if(shop == null){
             return Result.fail("店铺不存在!");
         }
-
         return Result.ok(shop);
     }
     private static final ExecutorService CACHE_REBUILD_EXECUTOR = Executors.newFixedThreadPool(10);
