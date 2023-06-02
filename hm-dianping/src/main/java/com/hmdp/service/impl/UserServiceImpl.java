@@ -12,6 +12,7 @@ import com.hmdp.entity.User;
 import com.hmdp.mapper.UserMapper;
 import com.hmdp.service.IUserService;
 import com.hmdp.utils.RegexUtils;
+import com.hmdp.utils.UserHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -83,6 +84,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         //
         String tokenKey = "login:token:"+token;
         stringRedisTemplate.opsForHash().putAll(LOGIN_USER_KEY,userMap);
+        UserHolder.saveUser(userDTO);
         stringRedisTemplate.expire(LOGIN_USER_KEY,CACHE_SHOP_TTL,TimeUnit.MINUTES);
         //返回token
         return Result.ok(token);
