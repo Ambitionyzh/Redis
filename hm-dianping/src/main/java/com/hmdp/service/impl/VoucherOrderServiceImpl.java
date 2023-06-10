@@ -9,6 +9,7 @@ import com.hmdp.service.IVoucherOrderService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hmdp.utils.RedisIdWorker;
 import com.hmdp.utils.UserHolder;
+import org.springframework.aop.framework.AopContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,7 +32,7 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
     @Resource
     private RedisIdWorker redisIdWorker;
     @Override
-    @Transactional
+
     public Result seckillVoucher(Long voucherId) {
         //1.查询优惠券
         SeckillVoucher voucher = seckillVoucherService.getById(voucherId);
@@ -47,10 +48,32 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
         if (voucher.getStock() < 1) {
             return Result.fail("库存不足");
         }
-        //5.扣减库存
+        Long userId = 123456L;
+        synchronized (userId.toString().intern()){
+            IVoucherOrderService proxy = (IVoucherOrderService)AopContext.currentProxy();
+            //7.返回订单
+            return proxy.createVoucherOrder(voucherId);
+        }
+
+
+
+
+    }
+    @Transactional
+    public Result createVoucherOrder(Long voucherId){
+        //5.一人一单
+        Long userid = 123456L;
+
+        //5.1查询订单
+        int count = query().eq("user_id", userid).eq("voucher_id", voucherId).count();
+        if(count > 0){
+            return Result.fail("用户已经购买过一次!");
+        }
+        //6.扣减库存
         boolean success = seckillVoucherService.update()
                 .setSql("stock = stock - 1")
-                .eq("voucher_id",voucherId).update();
+                .eq("voucher_id",voucherId).gt("stock",0)
+                .update();
         if(!success){
             return Result.fail("库存不足");
         }
@@ -62,8 +85,8 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
         voucherOrder.setUserId(userId);
         voucherOrder.setVoucherId(voucherId);
         save(voucherOrder);
-        //7.返回订单
-
         return Result.ok(orderId);
+
+
     }
 }
