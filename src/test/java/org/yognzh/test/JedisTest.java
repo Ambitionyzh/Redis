@@ -3,6 +3,7 @@ package org.yognzh.test;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.yognzh.jedis.util.JedisConnectionFactory;
 import redis.clients.jedis.Jedis;
 
 import java.util.Map;
@@ -18,7 +19,8 @@ public class JedisTest {
     private Jedis jedis;
     @BeforeEach
     void setUp(){
-        jedis = new Jedis("192.168.10.102",6379);
+        //jedis = new Jedis("192.168.10.102",6379);
+        jedis = JedisConnectionFactory.getJedis();
         jedis.auth("wuhu");
         jedis.select(0);
     }
