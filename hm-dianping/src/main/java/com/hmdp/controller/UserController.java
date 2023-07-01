@@ -68,6 +68,9 @@ public class UserController {
     public Result me(){
         // TODO 获取当前登录的用户并返回
         UserDTO user = UserHolder.getUser();
+  /*      //UserDTO user = new UserDTO();
+        user.setId(1010L);
+        user.setNickName("user_7hqvl583dn");*/
         return Result.ok(user);
     }
 

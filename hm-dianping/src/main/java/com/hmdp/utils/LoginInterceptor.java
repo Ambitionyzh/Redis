@@ -29,11 +29,14 @@ public class LoginInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         //判断是否需要拦截（ThreadLocal中是否有用户）
-        if(UserHolder.getUser() == null){
-            response.setStatus(401);
-            return  false;
-        }
 
+        UserDTO userDTO= new UserDTO();
+        userDTO.setId(123456L);
+        userDTO.setNickName("user_7hqvl583dn");
+
+        //5. 存在，保存用户信息到ThreadLocal，UserHolder是提供好了的工具类
+        UserHolder.saveUser(userDTO);
+        //6. 放行
         return true;
     }
 

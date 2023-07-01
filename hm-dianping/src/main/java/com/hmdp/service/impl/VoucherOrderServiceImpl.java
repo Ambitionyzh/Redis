@@ -1,12 +1,15 @@
 package com.hmdp.service.impl;
 
 import com.hmdp.dto.Result;
+import com.hmdp.dto.UserDTO;
+import com.hmdp.entity.User;
 import com.hmdp.entity.VoucherOrder;
 import com.hmdp.mapper.VoucherOrderMapper;
 import com.hmdp.service.ISeckillVoucherService;
 import com.hmdp.service.IVoucherOrderService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hmdp.utils.RedisIdWorker;
+import com.hmdp.utils.UserHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
@@ -97,7 +100,8 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
 
     private IVoucherOrderService proxy;
     public Result seckillVoucher(Long voucherId) {
-        Long userId = 123456L;
+        UserDTO userDTO = UserHolder.getUser();
+        Long userId = userDTO.getId();
         //1.执行lua脚本
         Long result = stringRedisTemplate.execute(
                 SECKILL_SCRIPT,
@@ -143,7 +147,7 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
         if (voucher.getStock() < 1) {
             return Result.fail("库存不足");
         }
-        Long userId = 123456L;
+
         //创建锁对象
         //SimpleRedisLock lock = new SimpleRedisLock("order" + userId, stringRedisTemplate);
         RLock lock = redissonClient.getLock("lock:order:" + userId);
@@ -166,7 +170,8 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
     @Transactional
     public void createVoucherOrder(VoucherOrder voucherOrder){
         //5.一人一单
-        Long userid = 123456L;
+        UserDTO userDTO = UserHolder.getUser();
+        Long userid = userDTO.getId();
 
         //5.1查询订单
         int count = query().eq("user_id", userid).eq("voucher_id", voucherOrder.getVoucherId()).count();
