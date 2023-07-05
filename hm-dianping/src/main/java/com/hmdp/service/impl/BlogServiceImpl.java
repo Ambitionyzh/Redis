@@ -3,13 +3,16 @@ package com.hmdp.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.hmdp.dto.Result;
 import com.hmdp.dto.UserDTO;
 import com.hmdp.entity.Blog;
+import com.hmdp.entity.Follow;
 import com.hmdp.entity.User;
 import com.hmdp.mapper.BlogMapper;
 import com.hmdp.service.IBlogService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.hmdp.service.IFollowService;
 import com.hmdp.service.IUserService;
 import com.hmdp.utils.SystemConstants;
 import com.hmdp.utils.UserHolder;
@@ -24,6 +27,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.hmdp.utils.RedisConstants.BLOG_LIKED_KEY;
+import static com.hmdp.utils.RedisConstants.FEED_KEY;
 
 /**
  * <p>
@@ -40,6 +44,8 @@ public class BlogServiceImpl extends ServiceImpl<BlogMapper, Blog> implements IB
     private IUserService userService;
     @Resource
     private StringRedisTemplate stringRedisTemplate;
+    @Resource
+    private IFollowService followService;
     @Override
     public Result queryHotBlog(Integer current) {
         // 根据用户查询
@@ -89,7 +95,7 @@ public class BlogServiceImpl extends ServiceImpl<BlogMapper, Blog> implements IB
         if (score == null) {
             //点赞数 +1
             boolean success = update().setSql("liked = liked + 1").eq("id", id).update();
-            //将用户加入set集合
+            //将用户加入zset集合
             if (success) {
                 stringRedisTemplate.opsForZSet().add(key, userId.toString(), System.currentTimeMillis());
             }
@@ -98,7 +104,7 @@ public class BlogServiceImpl extends ServiceImpl<BlogMapper, Blog> implements IB
             //点赞数 -1
             boolean success = update().setSql("liked = liked - 1").eq("id", id).update();
             if (success) {
-                //从set集合移除
+                //从zset集合移除
                 stringRedisTemplate.opsForZSet().remove(key, userId.toString());
             }
         }
@@ -117,7 +123,7 @@ public class BlogServiceImpl extends ServiceImpl<BlogMapper, Blog> implements IB
         //将ids使用`,`拼接，SQL语句查询出来的结果并不是按照我们期望的方式进行排
         //所以我们需要用order by field来指定排序方式，期望的排序方式就是按照查询出来的id进行排序
         String idsStr = StrUtil.join(",", ids);
-        //select * from tb_user where id in (ids[0], ids[1] ...) order by field(id, ids[0], ids[1] ...)
+        //select * from tb_user where id in (ids[0], ids[1] ...) order by field (id, ids[0], ids[1] ...)
         List<UserDTO> userDTOS = userService.query().in("id", ids)
                 .last("order by field(id," + idsStr + ")")
                 .list().stream()
@@ -125,6 +131,30 @@ public class BlogServiceImpl extends ServiceImpl<BlogMapper, Blog> implements IB
                 .collect(Collectors.toList());
         return Result.ok(userDTOS);
     }
+
+    @Override
+    public Result saveBlog(Blog blog) {
+        // 获取登录用户
+        UserDTO user = UserHolder.getUser();
+        blog.setUserId(user.getId());
+        // 保存探店博文
+        save(blog);
+        // 条件构造器
+        LambdaQueryWrapper<Follow> queryWrapper = new LambdaQueryWrapper<>();
+        // 从follow表最中，查找当前用户的粉丝  select * from follow where follow_user_id = user_id
+        queryWrapper.eq(Follow::getFollowUserId, user.getId());
+        //获取当前用户的粉丝
+        List<Follow> follows = followService.list(queryWrapper);
+        for (Follow follow : follows) {
+            Long userId = follow.getUserId();
+            String key = FEED_KEY + userId;
+            //推送数据
+            stringRedisTemplate.opsForZSet().add(key, blog.getId().toString(), System.currentTimeMillis());
+        }
+        // 返回id
+        return Result.ok(blog.getId());
+    }
+
     private void isBlogLiked(Blog blog) {
         //1. 获取当前用户信息
         UserDTO userDTO = UserHolder.getUser();
