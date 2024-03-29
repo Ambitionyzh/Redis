@@ -36,14 +36,13 @@ import java.util.concurrent.TimeUnit;
 
 import static com.hmdp.utils.RedisConstants.*;
 
-/**
- * <p>
- *  服务实现类
- * </p>
- *
- * @author 虎哥
- * @since 2021-12-22
- */
+/** 
+ * @description:  
+ * @param: null 
+ * @return:  
+ * @author yongzh
+ * @date: 2024/3/27 23:08
+ */ 
 @Service
 public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IShopService {
 
@@ -75,7 +74,7 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
         String shopJson = stringRedisTemplate.opsForValue().get(key);
         //2.是否存在
         if(StrUtil.isBlank(shopJson)){
-            //3.未命中返回null
+            //3.未命中返回null，热点key问题不存在缓存穿透，缓存中的数据会事先进行预热，并且只有逻辑过期。未命中就是数据不存在直接返回null
             return null;
         }
         //4.命中，需要把json反序列化为对象
@@ -140,12 +139,19 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
                 return  queryWithMutex(id);
             }
 
-            //成功,根据id查询数据库
+            //获取锁成功,再次检查redis是否已经有缓存
+            //从redis查询商铺缓存
+             shopJson = stringRedisTemplate.opsForValue().get(key);
+            //是否存在
+            if(StrUtil.isNotBlank(shopJson)){
+                return JSONUtil.toBean(shopJson, Shop.class);
+            }
+            //redis没有缓存根据id查询数据库
             shop = getById(id);
-            Thread.sleep(200);
+            Thread.sleep(200);//模拟重建缓存延迟
             //不存在，返回错误
             if(shop == null){
-                //将""写入redis
+                //将""(空值)写入redis
                 stringRedisTemplate.opsForValue().set(key,"",CACHE_NULL_TTL, TimeUnit.MINUTES);
                 //返回错误信息
                 return null;

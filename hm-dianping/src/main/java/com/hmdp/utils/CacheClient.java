@@ -21,7 +21,7 @@ import static com.hmdp.utils.RedisConstants.*;
  * @author Administrator
  * @version 1.0
  * @program: hm-dianping
- * @description:
+ * @description:封装解决缓存穿透，缓存击穿，缓存雪崩的代码。生成一个工具类。
  * @date 2023/5/31 23:41
  */
 @Component
@@ -43,9 +43,22 @@ public class CacheClient {
         RedisData redisData = new RedisData();
         redisData.setData(value);
         redisData.setExpireTime(LocalDateTime.now().plusSeconds((unit.toSeconds(time))));
+        //将Java对象序列化为json存储在string类型的key中
         stringRedisTemplate.opsForValue().set(key, JSONUtil.toJsonStr(redisData));
     }
-
+    /** 
+     * @description:  使用泛型对方法进行封装，因为查询的时候返回值类型是不确定的,ID类型也不确定。由调用者传入真实类型
+     * R为返回值类型，ID为参数类型。Class<R>type代表返回值具体类型，Function<ID,R>dbCallBack代表查数据库方法，由调入者传入。
+     * @param: keyPrefix
+     * @param: id
+     * @param: type
+     * @param: dbCallBack
+     * @param: time
+     * @param: unit 
+     * @return: R 
+     * @author yongzh
+     * @date: 2024/3/29 23:20
+     */ 
     public <R,ID>R queryWithPassThrough(String keyPrefix, ID id, Class<R>type, Function<ID,R> dbCallBack,
                                          Long time , TimeUnit unit) {
         String key = keyPrefix + id;
