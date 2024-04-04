@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/Redis.iml" filepath="$PROJECT_DIR$/.idea/Redis.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jedis-demo/jedis-demo.iml" filepath="$PROJECT_DIR$/jedis-demo/jedis-demo.iml" />
     </modules>
   </component>
 </project>

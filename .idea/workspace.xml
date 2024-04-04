@@ -4,11 +4,37 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6a238dae-e784-488e-a126-8e8fce739eca" name="Changes" comment="" />
+    <list default="true" id="6a238dae-e784-488e-a126-8e8fce739eca" name="Changes" comment="RedissonLock.java,RedissonMultiLock解析。&#10;RedissonLock:tryAcquire,tryAcquireAsync,scheduleExpirationRenewal,renewExpiration.">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hm-dianping/src/main/java/RedissonMultiLock.java" beforeDir="false" afterPath="$PROJECT_DIR$/hm-dianping/src/main/java/RedissonMultiLock.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hm-dianping/src/main/java/com/hmdp/service/impl/VoucherOrderServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/hm-dianping/src/main/java/com/hmdp/service/impl/VoucherOrderServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hm-dianping/src/main/java/com/hmdp/utils/RedisIdWorker.java" beforeDir="false" afterPath="$PROJECT_DIR$/hm-dianping/src/main/java/com/hmdp/utils/RedisIdWorker.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hm-dianping/src/main/java/com/hmdp/utils/SimpleRedisLock.java" beforeDir="false" afterPath="$PROJECT_DIR$/hm-dianping/src/main/java/com/hmdp/utils/SimpleRedisLock.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hm-dianping/src/main/resources/seckill.lua" beforeDir="false" afterPath="$PROJECT_DIR$/hm-dianping/src/main/resources/seckill.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jedis-demo" beforeDir="false" afterPath="$PROJECT_DIR$/jedis-demo" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jedis-demo/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/jedis-demo/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jedis-demo/redis-demo/src/test/java/multi/test.java" beforeDir="false" afterPath="$PROJECT_DIR$/jedis-demo/redis-demo/src/test/java/multi/test.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jedis-demo/redis-demo/target/test-classes/cn/itcast/redisdemo/RedisDemoApplicationTests.class" beforeDir="false" afterPath="$PROJECT_DIR$/jedis-demo/redis-demo/target/test-classes/cn/itcast/redisdemo/RedisDemoApplicationTests.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jedis-demo/redis-demo/target/test-classes/multi/test.class" beforeDir="false" afterPath="$PROJECT_DIR$/jedis-demo/redis-demo/target/test-classes/multi/test.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jedis-demo/target/classes/org/yognzh/App.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/jedis-demo/target/classes/org/yognzh/config/RedissonConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/jedis-demo/target/classes/org/yognzh/jedis/util/JedisConnectionFactory.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/jedis-demo/target/test-classes/org/yognzh/AppTest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/jedis-demo/target/test-classes/org/yognzh/test/JedisTest.class" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <favorite-branches>
@@ -40,10 +66,16 @@
       </UrlAndAccount>
     </option>
   </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 1
 }</component>
   <component name="ProjectId" id="2QKtGCI67zpJrFL8MhA103qZ0Xw" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -59,11 +91,78 @@
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;spring.configuration.checksum&quot;: &quot;4389a84bcc0f18bc760150e6e378da4a&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;editing.templates&quot;,
+    &quot;spring.configuration.checksum&quot;: &quot;883c52da3d42d634897f6915132fd463&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
-  <component name="RunManager">
+  <component name="ReactorSettings">
+    <option name="notificationShown" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="configurationTypes">
+      <set>
+        <option value="SpringBootApplicationConfigurationType" />
+      </set>
+    </option>
+  </component>
+  <component name="RunManager" selected="JUnit.test.design (1)">
+    <configuration name="test.design (1)" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="redis-demo (1) (cn.itcast)" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="multi.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="multi" />
+      <option name="MAIN_CLASS_NAME" value="multi.test" />
+      <option name="METHOD_NAME" value="design" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="test.design" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="jedis-demo" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="multi.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="multi" />
+      <option name="MAIN_CLASS_NAME" value="multi.test" />
+      <option name="METHOD_NAME" value="design" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="test.designA" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="redis-demo (1) (cn.itcast)" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="multi.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="multi" />
+      <option name="MAIN_CLASS_NAME" value="multi.test" />
+      <option name="METHOD_NAME" value="designA" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="HmDianPingApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <module name="hm-dianping" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.hmdp.HmDianPingApplication" />
@@ -71,6 +170,34 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="RedisDemoApplication (1)" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="jedis-demo" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="cn.itcast.redisdemo.RedisDemoApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="RedisDemoApplication (2)" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="redis-demo (1) (cn.itcast)" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="cn.itcast.redisdemo.RedisDemoApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="RedisDemoApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="redis-demo (2) (com.heima)" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.yongzh.redisdemo.RedisDemoApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.test.design (1)" />
+        <item itemvalue="JUnit.test.designA" />
+        <item itemvalue="JUnit.test.design" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -83,8 +210,25 @@
       <workItem from="1708348247429" duration="1614000" />
       <workItem from="1711549931941" duration="3936000" />
       <workItem from="1711637283869" duration="2957000" />
-      <workItem from="1711724659061" duration="2275000" />
+      <workItem from="1711724659061" duration="2649000" />
+      <workItem from="1711727885595" duration="39000" />
+      <workItem from="1711804759119" duration="2691000" />
+      <workItem from="1711849842749" duration="4071000" />
+      <workItem from="1711891996343" duration="3188000" />
+      <workItem from="1711981244633" duration="2552000" />
+      <workItem from="1712058832508" duration="4862000" />
+      <workItem from="1712153580307" duration="2492000" />
+      <workItem from="1712221676764" duration="2023000" />
     </task>
+    <task id="LOCAL-00001" summary="RedissonLock.java,RedissonMultiLock解析。&#10;RedissonLock:tryAcquire,tryAcquireAsync,scheduleExpirationRenewal,renewExpiration.">
+      <option name="closed" value="true" />
+      <created>1712066711077</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1712066711077</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -101,7 +245,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="spring-data-redis" />
+                        <option value="Redis-demo" />
                       </list>
                     </value>
                   </entry>
@@ -112,5 +256,30 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="RedissonLock.java,RedissonMultiLock解析。&#10;RedissonLock:tryAcquire,tryAcquireAsync,scheduleExpirationRenewal,renewExpiration." />
+    <option name="LAST_COMMIT_MESSAGE" value="RedissonLock.java,RedissonMultiLock解析。&#10;RedissonLock:tryAcquire,tryAcquireAsync,scheduleExpirationRenewal,renewExpiration." />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/jedis-demo/redis-demo/src/test/java/multi/test.java</url>
+          <line>18</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/jedis-demo/redis-demo/src/main/java/multi/dsmHadler.java</url>
+          <line>20</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/jedis-demo/redis-demo/src/main/java/multi/Factory.java</url>
+          <line>25</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
