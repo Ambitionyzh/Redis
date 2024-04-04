@@ -12,7 +12,7 @@ import java.time.format.DateTimeFormatter;
  * @author Administrator
  * @version 1.0
  * @program: hm-dianping
- * @description:
+ * @description:生成全局唯一id
  * @date 2023/6/2 21:05
  */
 @Component
@@ -37,7 +37,7 @@ public class RedisIdWorker {
         String date = now.format(DateTimeFormatter.ofPattern("yyyy:MM:dd"));
         long count = stringRedisTemplate.opsForValue().increment("icr:" + keyPrefix + date);
 
-        //3.拼接并返回
+        //3.拼接并返回 时间戳左移32位，低位与count进行或运算
         return timeStamp << COUNT_BITS | count;
     }
 

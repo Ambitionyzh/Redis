@@ -369,6 +369,7 @@ public class RedissonMultiLock implements RLock {
         long lockWaitTime = calcLockWaitTime(remainTime);
         
         int failedLocksLimit = failedLocksLimit();
+        //循环去获取list中的锁
         List<RLock> acquiredLocks = new ArrayList<>(locks.size());
         for (ListIterator<RLock> iterator = locks.listIterator(); iterator.hasNext();) {
             RLock lock = iterator.next();
@@ -387,15 +388,18 @@ public class RedissonMultiLock implements RLock {
                 lockAcquired = false;
             }
             
-            if (lockAcquired) {
+            if (lockAcquired) {//成功拿到锁，则把拿到的锁加入list
                 acquiredLocks.add(lock);
-            } else {
+            } else {//没有拿到锁
+                //如果已经拿到了所有的锁，则退出
                 if (locks.size() - acquiredLocks.size() == failedLocksLimit()) {
                     break;
                 }
 
                 if (failedLocksLimit == 0) {
+                    //把拿到的所进行释放
                     unlockInner(acquiredLocks);
+                    //
                     if (waitTime == -1) {
                         return false;
                     }
