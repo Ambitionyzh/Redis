@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
  * @description:
  * @date 2023/8/2 23:49
  */
-@SpringBootTest(classes = uhuHadler.class)
+@SpringBootTest(classes = dsmHadler.class)
  class test {
     @Test
     void design(){
