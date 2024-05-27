@@ -17,12 +17,10 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * <p>
- * 前端控制器
- * </p>
- *
- * @author 虎哥
- * @since 2021-12-22
+ * @description: TODO 笔记相关功能
+ * @author yongzh
+ * @date 2024/4/4 19:47
+ * @version 1.0
  */
 @RestController
 @RequestMapping("/blog")

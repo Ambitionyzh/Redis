@@ -41,7 +41,7 @@ public class FollowServiceImpl extends ServiceImpl<FollowMapper, Follow> impleme
         LambdaQueryWrapper<Follow> queryWrapper = new LambdaQueryWrapper<>();
         //查询当前用户是否关注了该笔记的博主
         queryWrapper.eq(Follow::getUserId, userId).eq(Follow::getFollowUserId, followUserId);
-        //只查询一个count就行了
+        //只查询一个count就行了，大于0表示关注
         int count = this.count(queryWrapper);
         return Result.ok(count > 0);
     }
@@ -51,7 +51,7 @@ public class FollowServiceImpl extends ServiceImpl<FollowMapper, Follow> impleme
         //获取当前用户id
         Long userId = UserHolder.getUser().getId();
         String key = "follows:" + userId;
-        //判断是否关注
+        //判断是关注还是取关
         if (isFellow) {
             //关注，则将信息保存到数据库
             Follow follow = new Follow();
@@ -59,7 +59,7 @@ public class FollowServiceImpl extends ServiceImpl<FollowMapper, Follow> impleme
             follow.setFollowUserId(followUserId);
             //如果保存成功
             boolean success = save(follow);
-            //则将数据也写入Redis
+            //则将数据也写入Redis，方便后面查询共同关注。用set求交集。
             if (success) {
                 stringRedisTemplate.opsForSet().add(key, followUserId.toString());
             }

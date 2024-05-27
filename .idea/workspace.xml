@@ -4,25 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6a238dae-e784-488e-a126-8e8fce739eca" name="Changes" comment="RedissonLock.java,RedissonMultiLock解析。&#10;RedissonLock:tryAcquire,tryAcquireAsync,scheduleExpirationRenewal,renewExpiration.">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+    <list default="true" id="6a238dae-e784-488e-a126-8e8fce739eca" name="Changes" comment="RedissonMultiLock原理&#10;优惠券秒杀流程优化，采用redis Stream消息队列异步消费。从500ms优化到110ms。">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hm-dianping/src/main/java/RedissonMultiLock.java" beforeDir="false" afterPath="$PROJECT_DIR$/hm-dianping/src/main/java/RedissonMultiLock.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hm-dianping/src/main/java/com/hmdp/service/impl/VoucherOrderServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/hm-dianping/src/main/java/com/hmdp/service/impl/VoucherOrderServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hm-dianping/src/main/java/com/hmdp/utils/RedisIdWorker.java" beforeDir="false" afterPath="$PROJECT_DIR$/hm-dianping/src/main/java/com/hmdp/utils/RedisIdWorker.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hm-dianping/src/main/java/com/hmdp/utils/SimpleRedisLock.java" beforeDir="false" afterPath="$PROJECT_DIR$/hm-dianping/src/main/java/com/hmdp/utils/SimpleRedisLock.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hm-dianping/src/main/resources/seckill.lua" beforeDir="false" afterPath="$PROJECT_DIR$/hm-dianping/src/main/resources/seckill.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hm-dianping/src/main/java/com/hmdp/controller/BlogController.java" beforeDir="false" afterPath="$PROJECT_DIR$/hm-dianping/src/main/java/com/hmdp/controller/BlogController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hm-dianping/src/main/java/com/hmdp/controller/FollowController.java" beforeDir="false" afterPath="$PROJECT_DIR$/hm-dianping/src/main/java/com/hmdp/controller/FollowController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hm-dianping/src/main/java/com/hmdp/service/impl/BlogServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/hm-dianping/src/main/java/com/hmdp/service/impl/BlogServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hm-dianping/src/main/java/com/hmdp/service/impl/FollowServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/hm-dianping/src/main/java/com/hmdp/service/impl/FollowServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/jedis-demo" beforeDir="false" afterPath="$PROJECT_DIR$/jedis-demo" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jedis-demo/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/jedis-demo/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jedis-demo/redis-demo/src/test/java/multi/test.java" beforeDir="false" afterPath="$PROJECT_DIR$/jedis-demo/redis-demo/src/test/java/multi/test.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jedis-demo/redis-demo/target/test-classes/cn/itcast/redisdemo/RedisDemoApplicationTests.class" beforeDir="false" afterPath="$PROJECT_DIR$/jedis-demo/redis-demo/target/test-classes/cn/itcast/redisdemo/RedisDemoApplicationTests.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jedis-demo/redis-demo/target/test-classes/multi/test.class" beforeDir="false" afterPath="$PROJECT_DIR$/jedis-demo/redis-demo/target/test-classes/multi/test.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jedis-demo/target/classes/org/yognzh/App.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jedis-demo/target/classes/org/yognzh/config/RedissonConfig.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jedis-demo/target/classes/org/yognzh/jedis/util/JedisConnectionFactory.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jedis-demo/target/test-classes/org/yognzh/AppTest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jedis-demo/target/test-classes/org/yognzh/test/JedisTest.class" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -91,6 +79,7 @@
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
@@ -218,7 +207,12 @@
       <workItem from="1711981244633" duration="2552000" />
       <workItem from="1712058832508" duration="4862000" />
       <workItem from="1712153580307" duration="2492000" />
-      <workItem from="1712221676764" duration="2023000" />
+      <workItem from="1712221676764" duration="5448000" />
+      <workItem from="1712300176534" duration="987000" />
+      <workItem from="1713454559219" duration="1227000" />
+      <workItem from="1713614924592" duration="1206000" />
+      <workItem from="1713674765077" duration="1211000" />
+      <workItem from="1716720379011" duration="777000" />
     </task>
     <task id="LOCAL-00001" summary="RedissonLock.java,RedissonMultiLock解析。&#10;RedissonLock:tryAcquire,tryAcquireAsync,scheduleExpirationRenewal,renewExpiration.">
       <option name="closed" value="true" />
@@ -228,7 +222,23 @@
       <option name="project" value="LOCAL" />
       <updated>1712066711077</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="none">
+      <option name="closed" value="true" />
+      <created>1712225254320</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1712225254320</updated>
+    </task>
+    <task id="LOCAL-00003" summary="RedissonMultiLock原理&#10;优惠券秒杀流程优化，采用redis Stream消息队列异步消费。从500ms优化到110ms。">
+      <option name="closed" value="true" />
+      <created>1712225552768</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1712225552768</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -259,7 +269,9 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="RedissonLock.java,RedissonMultiLock解析。&#10;RedissonLock:tryAcquire,tryAcquireAsync,scheduleExpirationRenewal,renewExpiration." />
-    <option name="LAST_COMMIT_MESSAGE" value="RedissonLock.java,RedissonMultiLock解析。&#10;RedissonLock:tryAcquire,tryAcquireAsync,scheduleExpirationRenewal,renewExpiration." />
+    <MESSAGE value="none" />
+    <MESSAGE value="RedissonMultiLock原理&#10;优惠券秒杀流程优化，采用redis Stream消息队列异步消费。从500ms优化到110ms。" />
+    <option name="LAST_COMMIT_MESSAGE" value="RedissonMultiLock原理&#10;优惠券秒杀流程优化，采用redis Stream消息队列异步消费。从500ms优化到110ms。" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
