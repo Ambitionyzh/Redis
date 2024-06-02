@@ -211,3 +211,82 @@ Set是Redis中的单列集合，满足下列特点：
 ◆为了查询效率和唯一性，set采用HT编码(Dict)。Dict中的key用来存储元素，value统一为null。
 
 ◆当存储的所有数据都是整数，并且元素数量不超过set-max-intset-entries时，Set会采用IntSet编码，以节省内存。InSet在两种情况下会发生编码转换：1.插入数据后超过set-max-intset-entries（默认为500）2.插入了字符类型数据。
+
+### Zset
+
+ZSet也就是SortedSet,其中每一个元素都需要指定一个score值和member值。
+
+* 可以根据score值排序后
+* member必须唯一
+* 可以根据member查询分数
+
+因此，ZSt底层数据结构必须满足键值存储、键必须唯一、可排序这几个需求。之前学习的哪种编码结构可以满足？
+
+* SkipList:可以排序，并且可以同时存储score和ele值(member)
+* HT(Dict):可以键值存储，并且可以根据key找value
+
+源码：
+
+![image-20240601154228395](Redis数据结构.assets/image-20240601154228395.png)
+
+内存结构示意图：
+
+![image-20240601154326956](Redis数据结构.assets/image-20240601154326956.png)
+
+由此可见，Zset比较占用内存。内部存储了Dict和SkipList两种结构。为了满足查询和排序。
+
+当元素数量不多时，HT和SkipList的优势不明显，而且更耗内存。因此zSet还会采用ZipList结构来节省内存，不过需要同时满足两个条件：  
+①元素数量小于zset_max_ziplist_entries,默认值128  
+②每个元素都小于zset_max ziplist _value字节，默认值64。
+
+但是ZipList本身是无序的，为了保证排序需要，在添加元素的时候需要按照顺序插入。
+
+ziplist本身没有排序功能，而且没有键值对的概念，因此需要有zset通过编码实现：
+
+* ZipList是连续内存，因此score和element是紧挨在一起的两个entry,element在前，score在后
+
+* score越小越接近队首，scorei越大越接近队尾，按照score值升序排列
+
+  
+
+Zset初始化代码片段：可以看到有Zset和ZipList两种类型。
+
+![image-20240601154639006](Redis数据结构.assets/image-20240601154639006.png)
+
+![image-20240601154819704](Redis数据结构.assets/image-20240601154819704.png)
+
+#### Hash
+
+Hash结构与Redis中的Zset非常类似：
+
+* 都是键值存储
+* 都需求根据键获取值
+* 键必须唯一
+
+区别如下：
+
+Zset的键是member,值是score；hash的键和值都是任意值
+zset要根据score:排序；hash则无需排序
+
+因此，Hash底层采用的编码与Zset也基本一致，只需要把排序有关的SkipList去掉即可：
+
+* Hash结构默认采用ZipList编码，用以节省内存。ZipList中相邻的两个entry分别保存field和value
+* 当数据量较大时，Hash结构会转为HT编码，也就是DiCt,触发条件有两个：  
+  ①ZipList中的元素数量超过了hash-max-ziplist-entries(默认512)  
+  ②ZipList中的任意entry大小超过了hash-max-ziplist-value(默认64字节)
+
+![image-20240601184913990](Redis数据结构.assets/image-20240601184913990.png)
+
+思考：采用ZipList编码虽然节省内存，但是在取值的时候只能遍历来查找，所以只适用于元素数量较少的情况。
+
+![image-20240601185127604](Redis数据结构.assets/image-20240601185127604.png)
+
+从源码看新创建的Hash默认采用ZipList编码，但是在添加元素的时候会执行判断，看是否需要转换成Dict。
+
+![image-20240601185255953](Redis数据结构.assets/image-20240601185255953.png)
+
+注意，当ZipList大小超过1G时，也会转换编码。所以hash-max-ziplist-entries，hash-max-ziplist-value的值不建议修改。
+
+Hash加入元素源码：
+
+![image-20240601185414206](Redis数据结构.assets/image-20240601185414206.png)
